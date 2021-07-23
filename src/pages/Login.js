@@ -1,15 +1,47 @@
-import React from 'react'
-import {Link} from 'react-router-dom'
+import React, {useState} from 'react';
+import { connect } from 'react-redux';
+import { Container, Row, Col, Form, Button } from 'react-bootstrap';
+import { login } from '../actions/userActions';
 
-const DashboardPage = () => (
-  <section>
-    <h1>Dashboard</h1>
-    <p>This is the dashboard.</p>
+const Login = ({ dispatch, loggingIn, hasErrors }) => {
+  const [username, setUserName] = useState();
+  const [password, setPassword] = useState();
 
-    <Link to="/posts" className="button">
-      View Posts
-    </Link>
-  </section>
-)
+  const handleSubmit = async e => {
+    e.preventDefault();
+    console.log('handling');
+    login({username, password});
+    //setToken(token);
+  }
 
-export default DashboardPage
+  return (
+    <Container>
+      <Row>
+        <Col md={{ span: 4, offset: 4 }}>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Label>Username</Form.Label>
+              <Form.Control type="text" placeholder="Username" onChange={e => setUserName(e.target.value)} />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formBasicPassword">
+              <Form.Label>Password</Form.Label>
+              <Form.Control type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} />
+            </Form.Group>
+            <Button variant="primary" type="submit">
+              Login
+            </Button>
+          </Form>
+        </Col>
+      </Row>
+    </Container>
+  )
+}
+
+const mapStateToProps = (state) => ({
+  loading: state.posts.loading,
+  posts: state.posts.posts,
+  hasErrors: state.posts.hasErrors,
+})
+
+export default connect(mapStateToProps)(Login)

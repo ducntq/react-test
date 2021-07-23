@@ -1,21 +1,22 @@
-import * as actions from '../actions/postsActions'
+import * as actions from '../actions/userActions';
 
 export const initialState = {
   username: '',
   token: '',
   expiration: null,
-  loggedIn: false
-}
+  loggedIn: false,
+  loggingIn: false
+};
 
 export default function userReducer(state = initialState, action) {
   switch (action.type) {
-    case actions.GET_POSTS:
-      return {...state, loading: true}
-    case actions.GET_POSTS_SUCCESS:
-      return {posts: action.payload, loading: false, hasErrors: false}
-    case actions.GET_POSTS_FAILURE:
-      return {...state, loading: false, hasErrors: true}
+    case actions.USER_LOGIN:
+      return { ...state, loggingIn: true };
+    case actions.USER_LOGIN_SUCCESS:
+      return { username: action.payload.UserName, token: action.payload.Token, loggingIn: false, loggedIn: true, hasErrors: false };
+    case actions.USER_LOGIN_FAILURE:
+      return { ...state, loggingIn: false, loggedIn: false, hasErrors: true };
     default:
-      return state
+      return state;
   }
 }
