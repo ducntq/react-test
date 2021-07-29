@@ -19,7 +19,6 @@ export const userLoginFailure = () => ({
 export function login(username, password) {
   return async (dispatch) => {
     dispatch(userLogin())
-    console.log('sending');
     try {
       const opts = {
         headers: {
@@ -31,8 +30,11 @@ export function login(username, password) {
       };
       const response = await fetch(`${process.env.REACT_APP_API_URL}/Auth/Login`, opts);
       const data = await response.json()
-
-      dispatch(userLoginSuccess(data))
+      if (data.success) {
+        localStorage.setItem('user', {username: data.userName, token: data.token})
+        dispatch(userLoginSuccess(data))
+      }
+      else dispatch(userLoginFailure())
     } catch (error) {
       dispatch(userLoginFailure())
     }

@@ -1,17 +1,25 @@
-import React, {useState} from 'react';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
+import { connect, useSelector } from 'react-redux';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { login } from '../actions/userActions';
 
-const Login = ({ dispatch, loggingIn, hasErrors }) => {
+function Greeting(props) {
+  const isLoggedIn = useSelector(state => state.user.loggedIn);
+  if (isLoggedIn) {
+    return <p>Logged in</p>;
+  }
+  return <p>Not logged in</p>;
+}
+
+const Login = ({ dispatch }) => {
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
 
   const handleSubmit = async e => {
     e.preventDefault();
-    console.log('handling');
-    login({username, password});
-    //setToken(token);
+    if (username && password) {
+      dispatch(login(username, password));
+    }
   }
 
   return (
@@ -31,6 +39,7 @@ const Login = ({ dispatch, loggingIn, hasErrors }) => {
             <Button variant="primary" type="submit">
               Login
             </Button>
+            <Greeting />
           </Form>
         </Col>
       </Row>
@@ -39,9 +48,8 @@ const Login = ({ dispatch, loggingIn, hasErrors }) => {
 }
 
 const mapStateToProps = (state) => ({
-  loading: state.posts.loading,
-  posts: state.posts.posts,
-  hasErrors: state.posts.hasErrors,
+  isLoggedIn: state.user.isLoggedin,
+  username: state.user.userName
 })
 
 export default connect(mapStateToProps)(Login)
