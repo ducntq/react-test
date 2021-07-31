@@ -4,7 +4,7 @@ import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { login } from '../actions/userActions';
 import { Redirect } from 'react-router-dom'
 
-function Greeting(props) {
+function Greeting() {
   const loggedIn = useSelector(state => state.user.loggedIn);
   if (loggedIn) {
     return <Redirect to="/" />;
